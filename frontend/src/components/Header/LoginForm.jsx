@@ -138,7 +138,7 @@ function LoginForm() {
                     htmlFor="email"
                     className="block text-gray-700 font-bold mb-2"
                   >
-                    Email/Mobile No.
+                    Email/Mobile No.<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -158,7 +158,7 @@ function LoginForm() {
                     htmlFor="password"
                     className="block text-gray-700 font-bold mb-2"
                   >
-                    Password
+                    Password<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"

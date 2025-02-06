@@ -32,6 +32,12 @@ const DonatePage = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
+    // Check if the donation amount is zero or less
+    if (userInput <= 0) {
+      setApiError("Please enter a valid donation amount greater than zero.");
+      return; // Prevent further execution if the amount is invalid
+    }
+
     const formDataToSubmit = new FormData();
     const donationDTO = {
       userId: { ...user },
@@ -51,7 +57,7 @@ const DonatePage = () => {
       if (response.status === 201) {
         setDonationAdded(prev => !prev); // Toggle donationAdded to trigger re-fetch
         alert('Donation submitted successfully!');
-        setUserInput("");
+        setUserInput(""); // Clear input after successful submission
         setApiError('');
       } else {
         setApiError('Failed to submit donation. Please try again.');
@@ -80,7 +86,7 @@ const DonatePage = () => {
               <h2 className="text-xl font-bold mb-4">Scan to Donate</h2>
               <div className="mb-4">
                 <img
-                  src="./HomeImages/QR_Code.png"
+                  src="./HomeImages/qr.jpg"
                   alt="QR Code"
                   className="w-48 h-48"
                 />
@@ -109,6 +115,7 @@ const DonatePage = () => {
                   onChange={amountChangeHandler}
                   placeholder="Amount (in rupees)"
                   className="w-full p-2 border border-gray-300 rounded"
+                  min="1" // To ensure input is at least 1
                 />
                 <button
                   type="submit"

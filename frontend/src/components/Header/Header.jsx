@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isUserModalOpen, setUserModalOpen] = useState(false);  // New state for the modal
   const user = useSelector(selectUser); // Access user state from Redux
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ export default function Header() {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleUserModal = () => {
+    setUserModalOpen(!isUserModalOpen);
   };
 
   return (
@@ -139,9 +144,9 @@ export default function Header() {
             <div className="flex items-center space-x-4">
               <span className="text-gray-800 text-sm sm:text-base">Welcome, {user.name}</span>
               <Link
-                to="/profile"
+                to="#"
                 className="px-3 py-1 text-xs sm:text-sm lg:text-base font-medium text-gray-800 duration-200 bg-gray-50 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-300"
-                onClick={toggleMobileMenu}
+                onClick={toggleUserModal}  // Open the modal when clicked
               >
                 Profile
               </Link>
@@ -173,6 +178,33 @@ export default function Header() {
           )}
         </div>
       </nav>
+
+      {/* Modal for displaying user information */}
+      {isUserModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out">
+          <div
+            className="bg-white p-12 rounded-lg shadow-lg max-w-4xl w-full transform transition-all duration-700 ease-out"
+            style={{
+              transform: isUserModalOpen ? "scale(1) rotate(0deg)" : "scale(0.8) rotate(10deg)",
+              opacity: isUserModalOpen ? 1 : 0,
+            }}
+          >
+            <h2 className="text-4xl font-extrabold mb-6 text-center text-gray-800">User Profile</h2>
+            <div className="space-y-4 text-lg">
+              <p><strong>Name:</strong> {user.name}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Role:</strong> {user.role}</p>
+              {/* Add any other user data you want to display */}
+            </div>
+            <button
+              onClick={toggleUserModal}
+              className="mt-6 px-6 py-3 bg-gray-800 text-white rounded-lg text-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

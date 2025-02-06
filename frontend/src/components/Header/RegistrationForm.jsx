@@ -19,7 +19,6 @@ function RegistrationForm() {
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-
   const signInWithGoogle = () => {
     setErrors({}); // Clear any existing errors
     window.location.href = `${backendUrl}/oauth2/authorization/google`;
@@ -52,14 +51,15 @@ function RegistrationForm() {
       formErrors.mobile = "Mobile number should be exactly 10 digits.";
     }
 
-    const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!password) {
       formErrors.password = "Password is required.";
-    }else if(!password.match(passPattern)){
-      formErrors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+    } else if (!password.match(passPattern)) {
+      formErrors.password =
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
     } else if (password !== confirmPassword) {
       formErrors.password = "Passwords do not match.";
-    } 
+    }
 
     if (address.trim().length === 0) {
       formErrors.address = "Address is required.";
@@ -79,7 +79,7 @@ function RegistrationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (validate()) {
       try {
         const response = await axiosInstance.post(
@@ -97,7 +97,7 @@ function RegistrationForm() {
             },
           }
         );
-  
+
         if (response.status === 200) {
           setSuccessMessage("Registration successful! Please log in.");
           // Reset form data
@@ -109,7 +109,7 @@ function RegistrationForm() {
           setAddress("");
           setSelectedState(null);
           setSelectedCity(null);
-          
+
           navigate("/login");
         } else {
           // If the response is not successful, log the error data
@@ -121,7 +121,7 @@ function RegistrationForm() {
         }
       } catch (error) {
         // Enhanced error handling to log specific cases
-        console.error("Error during axios request:", error);  // Log the error object itself
+        console.error("Error during axios request:", error); // Log the error object itself
         if (error.response) {
           // Server responded with an error code (e.g., 400, 500)
           console.error("Response error data:", error.response.data);
@@ -145,7 +145,6 @@ function RegistrationForm() {
       }
     }
   };
-  
 
   const stateOptions = State.getStatesOfCountry("IN").map((state) => ({
     label: state.name,
@@ -160,48 +159,53 @@ function RegistrationForm() {
     : [];
 
   return (
-<div className="relative w-full h-screen items-center justify-center min-h-screen bg-gray-400 font-sans overflow-hidden">
-  <video
-    className="absolute top-0 left-0 w-full h-full object-cover z-0"
-    autoPlay
-    loop
-    muted
-  >
-    <source src="./HomeImages/background.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-  <div className="relative z-10 flex justify-center items-center min-h-screen bg-opacity-50 bg-gray-400 p-8">
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md bg-opacity-50">
-      <h1 className="text-2xl font-bold mb-4 mt-0">Create New Account</h1>
+    <div className="relative w-full h-screen items-center justify-center min-h-screen bg-gray-400 font-sans overflow-hidden">
+      <video
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        autoPlay
+        loop
+        muted
+      >
+        <source src="./HomeImages/background.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div className="relative z-10 flex justify-center items-center min-h-screen bg-opacity-50 bg-gray-400 p-8">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md bg-opacity-50">
+          <h1 className="text-2xl font-bold mb-4 mt-0">Create New Account</h1>
 
+          <div className="flex justify-between mb-6">
+            <button
+              className="flex items-center justify-center px-4 py-2 bg-blue-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mr-2"
+              onClick={signInWithGoogle}
+            >
+              <img
+                src="/LoginImages/google-brands-solid.svg"
+                alt="Google"
+                className="w-5 h-5 mr-2"
+              />
+              Sign in with Google
+            </button>
 
-      <div className="flex justify-between mb-6">
-        <button className="flex items-center justify-center px-4 py-2 bg-blue-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mr-2" onClick={signInWithGoogle}>
-          <img
-            src="/LoginImages/google-brands-solid.svg"
-            alt="Google"
-            className="w-5 h-5 mr-2"
-          />
-          Sign in with Google
-        </button>
+            <button
+              className="flex items-center justify-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ml-2"
+              onClick={signInWithGithub}
+            >
+              <img
+                src="/LoginImages/github-brands-solid.svg"
+                alt="GitHub"
+                className="w-5 h-5 mr-2"
+              />
+              Sign in with GitHub
+            </button>
+          </div>
 
-        <button className="flex items-center justify-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ml-2" onClick={signInWithGithub}>
-          <img
-            src="/LoginImages/github-brands-solid.svg"
-            alt="GitHub"
-            className="w-5 h-5 mr-2"
-          />
-          Sign in with GitHub
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
               <label
                 htmlFor="name"
                 className="block text-gray-700 font-bold mb-1"
               >
-                Name
+                Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -220,7 +224,7 @@ function RegistrationForm() {
                 htmlFor="email"
                 className="block text-gray-700 font-bold mb-1"
               >
-                Email
+                Email <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -239,7 +243,7 @@ function RegistrationForm() {
                 htmlFor="mobile"
                 className="block text-gray-700 font-bold mb-1"
               >
-                Mobile Number
+                Mobile Number <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -258,7 +262,7 @@ function RegistrationForm() {
                 htmlFor="address"
                 className="block text-gray-700 font-bold mb-1"
               >
-                Address
+                Address <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -272,50 +276,56 @@ function RegistrationForm() {
               )}
             </div>
 
-        <div className="flex space-x-4 mb-2">
-          <div className="w-1/2">
-            <label htmlFor="state" className="block text-gray-700 font-bold mb-1">
-              State
-            </label>
-            <Select
-              id="state"
-              options={stateOptions}
-              value={selectedState}
-              onChange={(option) => {
-                setSelectedState(option);
-                setSelectedCity(null);
-              }}
-              className="w-full"
-            />
-            {errors.state && (
-              <p className="text-red-500 text-sm">{errors.state}</p>
-            )}
-          </div>
+            <div className="flex space-x-4 mb-2">
+              <div className="w-1/2">
+                <label
+                  htmlFor="state"
+                  className="block text-gray-700 font-bold mb-1"
+                >
+                  State <span className="text-red-500">*</span>
+                </label>
+                <Select
+                  id="state"
+                  options={stateOptions}
+                  value={selectedState}
+                  onChange={(option) => {
+                    setSelectedState(option);
+                    setSelectedCity(null);
+                  }}
+                  className="w-full"
+                />
+                {errors.state && (
+                  <p className="text-red-500 text-sm">{errors.state}</p>
+                )}
+              </div>
 
-          <div className="w-1/2">
-            <label htmlFor="city" className="block text-gray-700 font-bold mb-1">
-              City
-            </label>
-            <Select
-              id="city"
-              options={cityOptions}
-              value={selectedCity}
-              onChange={(option) => setSelectedCity(option)}
-              className="w-full"
-              isDisabled={!selectedState}
-            />
-            {errors.city && (
-              <p className="text-red-500 text-sm">{errors.city}</p>
-            )}
-          </div>
-        </div>
+              <div className="w-1/2">
+                <label
+                  htmlFor="city"
+                  className="block text-gray-700 font-bold mb-1"
+                >
+                  City <span className="text-red-500">*</span>
+                </label>
+                <Select
+                  id="city"
+                  options={cityOptions}
+                  value={selectedCity}
+                  onChange={(option) => setSelectedCity(option)}
+                  className="w-full"
+                  isDisabled={!selectedState}
+                />
+                {errors.city && (
+                  <p className="text-red-500 text-sm">{errors.city}</p>
+                )}
+              </div>
+            </div>
 
-        <div className="mb-2">
+            <div className="mb-2">
               <label
                 htmlFor="password"
                 className="block text-gray-700 font-bold mb-1"
               >
-                Password
+                Password <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
@@ -331,7 +341,7 @@ function RegistrationForm() {
                 htmlFor="confirmPassword"
                 className="block text-gray-700 font-bold mb-1"
               >
-                Re-enter Password
+                Re-enter Password <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
@@ -345,37 +355,25 @@ function RegistrationForm() {
               )}
             </div>
 
-            {errors.apiError && (
-              <p className="text-red-500 text-sm">{errors.apiError}</p>
-            )}
-            {successMessage && (
-              <p className="text-green-500 text-sm">{successMessage}</p>
-            )}
-
-            <div className="flex justify-center mb-2">
+            <div className="mb-4">
               <button
                 type="submit"
-                className="bg-black hover:bg-black/70 w-36 text-white font-bold py-2 px-4 rounded-lg mb-2 mt-4"
+                className="w-full py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
               >
                 Register
               </button>
             </div>
-      </form>
+          </form>
 
-      <div className="flex justify-center mb-2">
-        <div className="align-bottom">Already Registered?</div>
-        <Link
-          to="/login"
-          className="ml-2 text-black hover:scale-110 focus:ring-4 focus:ring-gray-300 font-medium underline rounded-lg text-sm px-2 lg:px-4 py-1 lg:py-2 mr-2 focus:outline-none"
-        >
-          Log in
-        </Link>
+          {successMessage && (
+            <p className="text-green-500 text-sm">{successMessage}</p>
+          )}
+          {errors.apiError && (
+            <p className="text-red-500 text-sm">{errors.apiError}</p>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-
   );
 }
 
