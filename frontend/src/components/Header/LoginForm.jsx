@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Import Link
 import axiosInstance from "../../AxiosInstance";
 import { setTokens } from "../../Features/authSlice";
 
@@ -14,18 +14,6 @@ function LoginForm() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const signInWithGoogle = () => {
-    setLoading(true); // Start loading
-    setErrors({}); // Clear any existing errors
-    window.location.href = `${backendUrl}/oauth2/authorization/google`;
-  };
-
-  const signInWithGithub = () => {
-    setLoading(true); // Start loading
-    setErrors({}); // Clear any existing errors
-    window.location.href = `${backendUrl}/oauth2/authorization/github`;
-  };
 
   const validateEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,11 +31,12 @@ function LoginForm() {
     }
 
     // Validate password
-    const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!password) {
       formErrors.password = "Password is required.";
-    }else if(!password.match(passPattern)){
-      formErrors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+    } else if (!password.match(passPattern)) {
+      formErrors.password =
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
     }
 
     if (Object.keys(formErrors).length > 0) {
@@ -77,13 +66,14 @@ function LoginForm() {
           );
 
           localStorage.setItem(
-            "user", 
-            JSON.stringify({email:email,
-              password:password,
-              loggedIn:true,
-              role:'Volunteer',
-            
-            }));
+            "user",
+            JSON.stringify({
+              email: email,
+              password: password,
+              loggedIn: true,
+              role: "Volunteer",
+            })
+          );
 
           navigate(
             `/home?token=${result.token}&refreshToken=${result.refreshToken}`
@@ -131,7 +121,6 @@ function LoginForm() {
             <>
               <h1 className="text-2xl font-bold mb-8">Login to your Account</h1>
 
-              
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label
@@ -193,35 +182,19 @@ function LoginForm() {
                   >
                     Forgot Password?
                   </a>
-                  <br />
-                  <span className="mx-2">or</span>
                 </div>
 
-                <div className="flex flex-col items-center space-y-4">
-                  <button
-                    className="flex items-center justify-center w-full max-w-xs px-4 py-2 bg-blue-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-red-300"
-                    onClick={signInWithGoogle}
-                    type="button" // Add type="button" to prevent form submission
-                  >
-                    <img
-                      src="./LoginImages/google-brands-solid.svg"
-                      alt="Google"
-                      className="w-6 h-6 mr-3"
-                    />
-                    <span>Sign in with Google</span>
-                  </button>
-                  <button
-                    className="flex items-center justify-center w-full max-w-xs px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    onClick={signInWithGithub}
-                    type="button" // Add type="button" to prevent form submission
-                  >
-                    <img
-                      src="./LoginImages/github-brands-solid.svg"
-                      alt="Github"
-                      className="w-6 h-6 mr-3"
-                    />
-                    <span>Sign in with Github</span>
-                  </button>
+                {/* Add a link to the registration page */}
+                <div className="text-center">
+                  <p className="text-gray-600">
+                    Don't have an account?{" "}
+                    <Link
+                      to="/register"
+                      className="text-blue-500 hover:underline"
+                    >
+                      Register here
+                    </Link>
+                  </p>
                 </div>
               </form>
             </>

@@ -35,7 +35,6 @@ const PetAdoptionForm = () => {
     city: "",
   });
 
-
   const stateOptions = State.getStatesOfCountry("IN").map((state) => ({
     label: state.name,
     value: state.isoCode,
@@ -95,7 +94,6 @@ const PetAdoptionForm = () => {
 
   useEffect(() => {
     if (id) {
-      // Fetch the pet details using the ID
       axiosInstance
         .get(`/api/animals/${id}`)
         .then((response) => {
@@ -121,17 +119,14 @@ const PetAdoptionForm = () => {
   const handleDownload = () => {
     const doc = new jsPDF();
   
-    // Title
     doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
     doc.text("Pet Adoption Commitment Form", 20, 20);
   
-    // Date
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 30);
   
-    // Section: Adopter's Information
     doc.setFont("helvetica", "bold");
     doc.text("Adopter's Information", 20, 40);
     doc.setFont("helvetica", "normal");
@@ -141,7 +136,6 @@ const PetAdoptionForm = () => {
     doc.text(`Email: ${formData.email}`, 20, 80);
     doc.text(`Address: ${formData.address}, ${selectedCity?.label}, ${selectedState?.label}`, 20, 90);
   
-    // Section: Animal's Information
     doc.setFont("helvetica", "bold");
     doc.text("Animal's Information", 20, 100);
     doc.setFont("helvetica", "normal");
@@ -151,15 +145,12 @@ const PetAdoptionForm = () => {
     doc.text(`Age: ${pet.age}`, 20, 140);
     doc.text(`Description: ${pet.description}`, 20, 150);
   
-    // Footer
     doc.setFont("helvetica", "italic");
     doc.setFontSize(10);
     doc.text("Thank you for choosing to adopt!", 20, 160);
   
-    // Save the PDF
     doc.save("PetAdoptionForm.pdf");
   };
-  
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -187,22 +178,19 @@ const PetAdoptionForm = () => {
     }
 
     try {
-      // Check if any of the user fields are null
       if (!user.phoneNo || !user.email || !user.address) {
         const updatedUser = {
           id: user.id,
           name: user.name,
-          phoneNo: user.phoneNo || formData.phoneNo, // Update only if null
-          email: user.email || formData.email, // Update only if null
-          address: user.address || `${formData.address}, ${selectedCity?.label}, ${selectedState?.label}`, // Update only if null
+          phoneNo: user.phoneNo || formData.phoneNo,
+          email: user.email || formData.email,
+          address: user.address || `${formData.address}, ${selectedCity?.label}, ${selectedState?.label}`,
         };
   
-        // Make the PUT request to update user data
         await axiosInstance.put(`/api/users/${user.id}`, updatedUser);
         console.log("User data updated successfully");
       }
   
-      // Proceed with the adoption request
       const response = await axiosInstance.post("/api/adoptions", formDataToSubmit, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -245,277 +233,241 @@ const PetAdoptionForm = () => {
           className="w-15"
         />
       </div>
-    ); // Loading state
+    );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 via-blue-300 to-purple-500 p-6">
-      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full">
-        <h1 className="text-4xl font-extrabold text-center text-purple-700 mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 via-blue-300 to-purple-500 p-4">
+      <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-4xl">
+        <h1 className="text-3xl font-bold text-center text-purple-700 mb-6">
           🐾 Pet Adoption Commitment Form 🐾
         </h1>
 
-        {/* Date and Download */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-4">
           <button
             onClick={handleDownload}
-            className="bg-black text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-800 transition-transform transform hover:scale-105"
+            className="bg-black text-white px-3 py-1.5 rounded-md shadow-sm hover:bg-gray-800 transition-transform transform hover:scale-105 text-sm"
           >
             Download <span className="text-xs ml-1">⬇️</span>
           </button>
         </div>
 
-        {/* Adoption Agreement Text */}
-        <p className="text-md text-gray-700 leading-relaxed mb-8">
-          Adoption or transfer of ownership of the animal is in consideration of
-          the following promises by the adopter: The adopter understands that
-          this is a commitment lasting for the entire life of the animal and the
-          adopter agrees that under no circumstances will they abandon the
-          animal, ill-treat, and deprive the animal of healthy food and water.
-          The adopter accepts responsibility for the actions of the animal and
-          to respect, and care for the animal in sickness and in health.
-        </p>
-
-        {/* Animal Details */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-purple-600 mb-4">
-            Animal Details
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="text-md font-medium text-gray-800">
-                Animal Name:
-              </label>
-              <input
-                type="text"
-                name="animalName"
-                value={pet.name}
-                disabled
-                className="w-full p-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent"
-                placeholder="Animal's Name (If any)"
-              />
-            </div>
-            <div>
-              <label className="text-md font-medium text-gray-800">
-                Species:
-              </label>
-              <select
-                name="species"
-                value={pet.category}
-                disabled
-                className="w-full p-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent"
-              >
-                <option value="">{pet.category}</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-md font-medium text-gray-800">
-                Gender:
-              </label>
-              <select
-                name="gender"
-                value={pet.gender}
-                disabled
-                className="w-full p-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent"
-              >
-                <option value="">{pet.gender}</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-md font-medium text-gray-800">Age:</label>
-              <input
-                type="text"
-                name="age"
-                value={pet.age}
-                disabled
-                className="w-full p-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent"
-                placeholder="Animal's Age"
-              />
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="text-md font-medium text-gray-800">
-              Description & Identification Marks:
-            </label>
-            <textarea
-              name="description"
-              value={pet.description}
-              disabled
-              className="w-full p-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent"
-              rows="4"
-              placeholder="Provide a description of the animal"
-            ></textarea>
-          </div>
-        </div>
-
-        {/* Adoption Agreement */}
-        <div className="mb-6">
-          <p className="text-md text-gray-700">
-            I,{" "}
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-1/2 p-2 mx-2 border-b border-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
-              placeholder="Your Name"
-            />
-            am willing to adopt
-            <input
-              type="text"
-              name="animalName"
-              value={pet.name}
-              disabled
-              className="w-1/2 p-2 mx-2 border-b border-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
-              placeholder="Animal Name"
-            />
-            from his/her foster parent.
-          </p>
-        </div>
-
-        {/* Adopter's Details */}
-        <div className="mb-8">
+        <div className="grid grid-cols-2 gap-6">
+          {/* Left Column */}
           <div>
-            <label className="text-md font-medium text-gray-800">
-              Adopter’s Full Name:
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent mb-4"
-              placeholder="Full Name"
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name}</p>
-            )}
+            <h2 className="text-xl font-semibold text-purple-600 mb-3">
+              Animal Details
+            </h2>
+            <div className="grid grid-cols-1 gap-4 mb-4">
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Animal Name:
+                </label>
+                <input
+                  type="text"
+                  name="animalName"
+                  value={pet.name}
+                  disabled
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Species:
+                </label>
+                <select
+                  name="species"
+                  value={pet.category}
+                  disabled
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                >
+                  <option value="">{pet.category}</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Gender:
+                </label>
+                <select
+                  name="gender"
+                  value={pet.gender}
+                  disabled
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                >
+                  <option value="">{pet.gender}</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">Age:</label>
+                <input
+                  type="text"
+                  name="age"
+                  value={pet.age}
+                  disabled
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-800">
+                Description & Identification Marks:
+              </label>
+              <textarea
+                name="description"
+                value={pet.description}
+                disabled
+                className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                rows="3"
+              ></textarea>
+            </div>
           </div>
-          <label className="text-md font-medium text-gray-800">Address:</label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent"
-            rows="3"
-            placeholder="Your Address"
-          ></textarea>
-          {errors.address && (
-            <p className="text-red-500 text-sm">{errors.address}</p>
-          )}
+
+          {/* Right Column */}
+          <div>
+            <h2 className="text-xl font-semibold text-purple-600 mb-3">
+              Adopter's Details
+            </h2>
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Adopter’s Full Name:
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs">{errors.name}</p>
+                )}
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">Address:</label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                  rows="2"
+                ></textarea>
+                {errors.address && (
+                  <p className="text-red-500 text-xs">{errors.address}</p>
+                )}
+              </div>
+              <div className="flex space-x-3">
+                <div className="w-1/2">
+                  <label htmlFor="state" className="block text-gray-700 font-medium mb-1 text-sm">
+                    State
+                  </label>
+                  <Select
+                    id="state"
+                    options={stateOptions}
+                    value={selectedState}
+                    onChange={(option) => {
+                      setSelectedState(option);
+                      setSelectedCity(null);
+                    }}
+                    className="w-full text-sm"
+                  />
+                  {errors.state && (
+                    <p className="text-red-500 text-xs">{errors.state}</p>
+                  )}
+                </div>
+                <div className="w-1/2">
+                  <label htmlFor="city" className="block text-gray-700 font-medium mb-1 text-sm">
+                    City
+                  </label>
+                  <Select
+                    id="city"
+                    options={cityOptions}
+                    value={selectedCity}
+                    onChange={(option) => setSelectedCity(option)}
+                    className="w-full text-sm"
+                    isDisabled={!selectedState}
+                  />
+                  {errors.city && (
+                    <p className="text-red-500 text-xs">{errors.city}</p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">Mobile:</label>
+                <input
+                  type="text"
+                  name="phoneNo"
+                  value={formData.phoneNo}
+                  onChange={handleChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+                {errors.phoneNo && <p className="text-red-500 text-xs">{errors.phoneNo}</p>}
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Alternate Contact:
+                </label>
+                <input
+                  type="text"
+                  name="alternateContact"
+                  value={formData.alternateContact}
+                  onChange={handleChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+                {errors.alternateContact && <p className="text-red-500 text-xs">{errors.alternateContact}</p>}
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+                {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Govt ID Number:
+                </label>
+                <input
+                  type="text"
+                  name="govtId"
+                  value={formData.govtId}
+                  onChange={handleChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+                {errors.govtId && <p className="text-red-500 text-xs">{errors.govtId}</p>}
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-800">
+                  Upload Address Proof (AADHAR / PAN / PASSPORT):
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent text-sm"
+                />
+                {formData.imagePreview && (
+                  <div className="mt-2">
+                    <img
+                      src={formData.imagePreview}
+                      alt="Preview"
+                      className="w-full h-auto rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex space-x-4 mb-2">
-          <div className="w-1/2">
-            <label htmlFor="state" className="block text-gray-700 font-bold mb-1">
-              State
-            </label>
-            <Select
-              id="state"
-              options={stateOptions}
-              value={selectedState}
-              onChange={(option) => {
-                setSelectedState(option);
-                setSelectedCity(null);
-              }}
-              className="w-full"
-            />
-            {errors.state && (
-              <p className="text-red-500 text-sm">{errors.state}</p>
-            )}
-          </div>
-
-          <div className="w-1/2">
-            <label htmlFor="city" className="block text-gray-700 font-bold mb-1">
-              City
-            </label>
-            <Select
-              id="city"
-              options={cityOptions}
-              value={selectedCity}
-              onChange={(option) => setSelectedCity(option)}
-              className="w-full"
-              isDisabled={!selectedState}
-            />
-            {errors.city && (
-              <p className="text-red-500 text-sm">{errors.city}</p>
-            )}
-          </div>
-        </div>
-
-        <label className="text-md font-medium text-gray-800">Mobile:</label>
-        <input
-          type="text"
-          name="phoneNo"
-          value={formData.phoneNo}
-          onChange={handleChange}
-          className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent mb-4"
-          placeholder="Your Mobile Number"
-        />
-        {errors.phoneNo && <p className="text-red-500 text-sm">{errors.phoneNo}</p>}
-
-        <label className="text-md font-medium text-gray-800">
-          Alternate Contact:
-        </label>
-        <input
-          type="text"
-          name="alternateContact"
-          value={formData.alternateContact}
-          onChange={handleChange}
-          className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent mb-4"
-          placeholder="Alternate Contact Number"
-        />
-        {errors.alternateContact && <p className="text-red-500 text-sm">{errors.alternateContact}</p>}
-
-        <label className="text-md font-medium text-gray-800">Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent mb-4"
-          placeholder="Your Email Address"
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-        <label className="text-md font-medium text-gray-800">
-          Govt ID Number:
-        </label>
-        <input
-          type="text"
-          name="govtId"
-          value={formData.govtId}
-          onChange={handleChange}
-          className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent mb-4"
-          placeholder="Your Govt Id Number"
-        />
-        {errors.govtId && <p className="text-red-500 text-sm">{errors.govtId}</p>}
-
-        <label className="text-md font-medium text-gray-800">
-          Upload Address Proof (AADHAR / PAN / PASSPORT):
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-            onChange={handleImageChange}
-          className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-300 focus:border-transparent mb-4"
-        />
-
-{formData.imagePreview && (
-    <div className="mt-4">
-        <img
-            src={formData.imagePreview}
-            alt="Preview"
-            className="w-full h-auto rounded-md"
-        />
-    </div>
-)}
-
-        {/* Submit Button */}
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-6">
           <button
-            className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-transform transform hover:scale-105"
+            className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600 transition-transform transform hover:scale-105 text-sm"
             onClick={handleSubmit}
           >
             Submit Application

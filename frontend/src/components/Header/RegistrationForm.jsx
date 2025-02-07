@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import Link
 import Select from "react-select";
 import { State, City } from "country-state-city";
 import axiosInstance from "../../AxiosInstance";
@@ -18,16 +18,6 @@ function RegistrationForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-  const signInWithGoogle = () => {
-    setErrors({}); // Clear any existing errors
-    window.location.href = `${backendUrl}/oauth2/authorization/google`;
-  };
-
-  const signInWithGithub = () => {
-    setErrors({}); // Clear any existing errors
-    window.location.href = `${backendUrl}/oauth2/authorization/github`;
-  };
 
   const validate = () => {
     let formErrors = {};
@@ -172,32 +162,6 @@ function RegistrationForm() {
       <div className="relative z-10 flex justify-center items-center min-h-screen bg-opacity-50 bg-gray-400 p-8">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md bg-opacity-50">
           <h1 className="text-2xl font-bold mb-4 mt-0">Create New Account</h1>
-
-          <div className="flex justify-between mb-6">
-            <button
-              className="flex items-center justify-center px-4 py-2 bg-blue-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mr-2"
-              onClick={signInWithGoogle}
-            >
-              <img
-                src="/LoginImages/google-brands-solid.svg"
-                alt="Google"
-                className="w-5 h-5 mr-2"
-              />
-              Sign in with Google
-            </button>
-
-            <button
-              className="flex items-center justify-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 ml-2"
-              onClick={signInWithGithub}
-            >
-              <img
-                src="/LoginImages/github-brands-solid.svg"
-                alt="GitHub"
-                className="w-5 h-5 mr-2"
-              />
-              Sign in with GitHub
-            </button>
-          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -364,6 +328,19 @@ function RegistrationForm() {
               </button>
             </div>
           </form>
+
+          {/* Add a link to the login page */}
+          <div className="text-center">
+            <p className="text-gray-600">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-500 hover:underline"
+              >
+                Log in here
+              </Link>
+            </p>
+          </div>
 
           {successMessage && (
             <p className="text-green-500 text-sm">{successMessage}</p>
