@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isUserModalOpen, setUserModalOpen] = useState(false);  // New state for the modal
+  const [isUserModalOpen, setUserModalOpen] = useState(false); // New state for the modal
   const user = useSelector(selectUser); // Access user state from Redux
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,6 +56,7 @@ export default function Header() {
           } lg:flex lg:flex-row lg:space-x-8 lg:mt-0 lg:order-1 w-full lg:w-auto`}
         >
           <ul className="flex flex-col font-medium lg:flex-row lg:space-x-8">
+            {/* Show Home first, then Post */}
             <li>
               <NavLink
                 to="/"
@@ -69,72 +70,100 @@ export default function Header() {
                 Home
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/about"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 lg:p-0 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
-                }
-                onClick={toggleMobileMenu}
-              >
-                About
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 lg:p-0 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
-                }
-                onClick={toggleMobileMenu}
-              >
-                Contact
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/donate"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 lg:p-0 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
-                }
-                onClick={toggleMobileMenu}
-              >
-                Donate
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/post"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 lg:p-0 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
-                }
-                onClick={toggleMobileMenu}
-              >
-                Post
-              </NavLink>
-            </li>
-            {user.role === 'ROLE_Admin' && (
-              <li>
-                <NavLink
-                  to="/admin"
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 lg:p-0 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
-                  }
-                  onClick={toggleMobileMenu}
-                >
-                  Admin Panel
-                </NavLink>
-              </li>
+
+
+            {/* Menu items for regular users */}
+            {user.role !== "ROLE_Admin" && (
+              <>
+                <li>
+                  <NavLink
+                    to="/about"
+                    className={({ isActive }) =>
+                      `block py-2 pr-4 pl-3 lg:p-0 ${
+                        isActive ? "text-orange-700" : "text-gray-700"
+                      } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
+                    }
+                    onClick={toggleMobileMenu}
+                  >
+                    About
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/contact"
+                    className={({ isActive }) =>
+                      `block py-2 pr-4 pl-3 lg:p-0 ${
+                        isActive ? "text-orange-700" : "text-gray-700"
+                      } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
+                    }
+                    onClick={toggleMobileMenu}
+                  >
+                    Contact
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/donate"
+                    className={({ isActive }) =>
+                      `block py-2 pr-4 pl-3 lg:p-0 ${
+                        isActive ? "text-orange-700" : "text-gray-700"
+                      } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
+                    }
+                    onClick={toggleMobileMenu}
+                  >
+                    Donate
+                  </NavLink>
+                </li>
+
+                <li>
+          <NavLink
+               to="/post"
+               className={({ isActive }) =>
+                `block py-2 pr-4 pl-3 lg:p-0 ${
+                 isActive ? "text-orange-700" : "text-gray-700"
+            } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
+          }
+         onClick={toggleMobileMenu}
+       >
+
+     Post
+   </NavLink>
+ </li>
+              </>
+            )}
+
+            {/* Admin-specific links */}
+            {user.role === "ROLE_Admin" && (
+              <>
+                <li>
+                  <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                      `block py-2 pr-4 pl-3 lg:p-0 ${
+                        isActive ? "text-orange-700" : "text-gray-700"
+                      } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
+                    }
+                    onClick={toggleMobileMenu}
+                  >
+                    Admin Panel
+                  </NavLink>
+                </li>
+
+                <li>
+          <NavLink
+               to="/post"
+               className={({ isActive }) =>
+                `block py-2 pr-4 pl-3 lg:p-0 ${
+                 isActive ? "text-orange-700" : "text-gray-700"
+            } hover:text-orange-700 hover:bg-gray-50 lg:hover:bg-transparent border-b lg:border-0 border-gray-100`
+          }
+         onClick={toggleMobileMenu}
+       >
+        
+     Post
+   </NavLink>
+ </li>
+              </>
             )}
           </ul>
         </div>
@@ -146,7 +175,7 @@ export default function Header() {
               <Link
                 to="#"
                 className="px-3 py-1 text-xs sm:text-sm lg:text-base font-medium text-gray-800 duration-200 bg-gray-50 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-300"
-                onClick={toggleUserModal}  // Open the modal when clicked
+                onClick={toggleUserModal}
               >
                 Profile
               </Link>
@@ -194,7 +223,6 @@ export default function Header() {
               <p><strong>Name:</strong> {user.name}</p>
               <p><strong>Email:</strong> {user.email}</p>
               <p><strong>Role:</strong> {user.role}</p>
-              {/* Add any other user data you want to display */}
             </div>
             <button
               onClick={toggleUserModal}

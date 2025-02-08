@@ -78,9 +78,9 @@ export default function Contact() {
                             </p>
 
                             <div className="mt-8 space-y-4">
-                                <p className="text-gray-600 text-lg font-semibold">📍 Pune, pASHAN</p>
+                                <p className="text-gray-600 text-lg font-semibold">📍 Pune, <Pashan></Pashan></p>
                                 <p className="text-gray-600 text-lg font-semibold">📞 +91 7875651700</p>
-                                <p className="text-gray-600 text-lg font-semibold">📧 arc@gmail.com</p>
+                                <p className="text-gray-600 text-lg font-semibold">📧 PawsConnectarc@gmail.com</p>
                             </div>
                         </div>
 

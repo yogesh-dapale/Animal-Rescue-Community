@@ -16,15 +16,47 @@ const services = [
     link: '/contact'
   },
   {
+    title: 'Pet Supplies',
+    description: 'Browse our selection of high-quality pet supplies, including food, toys, and accessories.',
+    buttonText: 'Shop Now',
+    icon: '🦴',
+    link: '/inProgress'
+  },
+  {
+    title: 'Pet Ambulance',
+    description: 'Book an ambulance for emergency rescues',
+    buttonText: 'Book Now',
+    icon: '🚑',
+    link: '/contact'
+  },
+  {
     title: 'Pet Grooming',
     description: 'Our experienced groomers care for your pets. Get in touch Now',
     buttonText: 'Contact',
     icon: '✂️',
     link: '/contact'
   },
-
- 
-  
+  {
+    title: 'Pet Sitters',
+    description: 'Travelling out of town? Need someone to look after your pets?',
+    buttonText: 'Contact',
+    icon: '👨‍🦯',
+    link: '/inProgress'
+  },
+  {
+    title: 'Animal Birth Control',
+    description: 'Animal Birth Control Programs for stray animals',
+    buttonText: 'Contact',
+    icon: '⚕️',
+    link: '/inProgress'
+  },
+  {
+    title: 'Pet Taxi',
+    description: 'Looking for a taxi for you to take your pets along?',
+    buttonText: 'Book Now',
+    icon: '🚗',
+    link: '/inProgress'
+  },
 ];
 
 const ProductAndServices = () => {
