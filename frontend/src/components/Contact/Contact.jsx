@@ -42,6 +42,27 @@ export default function Contact() {
         }
     };
 
+    // Function to fetch live location
+    const fetchLiveLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setFormData({
+                        ...formData,
+                        location: `${latitude}, ${longitude}`,
+                    });
+                },
+                (error) => {
+                    console.error('Error fetching location:', error);
+                    alert('Unable to fetch your location. Please enter it manually.');
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
+    };
+
     return (
         <div className="relative flex items-top justify-center bg-white sm:items-center sm:pt-0 min-h-screen">
             <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
@@ -92,14 +113,23 @@ export default function Contact() {
                                 className="w-full mt-4 py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
                             />
 
-                            <input 
-                                type="text" 
-                                name="location" 
-                                value={formData.location} 
-                                onChange={handleChange} 
-                                placeholder="Location" 
-                                className="w-full mt-4 py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                            />
+                            <div className="flex items-center mt-4">
+                                <input 
+                                    type="text" 
+                                    name="location" 
+                                    value={formData.location} 
+                                    onChange={handleChange} 
+                                    placeholder="Location" 
+                                    className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                                />
+                                <button 
+                                    type="button" 
+                                    onClick={fetchLiveLocation} 
+                                    className="ml-2 bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300"
+                                >
+                                    📍Live Location
+                                </button>
+                            </div>
 
                             {error && <p className="text-red-500 mt-2">{error}</p>}
 

@@ -17,7 +17,7 @@ export default function About() {
               imageInView ? "transform-none" : "transform translate-y-20 opacity-0"
             }`}
           >
-            <img src="/AboutImages/sahil.png" />
+            <img src="/AboutImages/heman.jpg" />
           </div>
           <div
             ref={textRef}
