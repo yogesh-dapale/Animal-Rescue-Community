@@ -75,20 +75,7 @@ public class JwtserviceImpl implements JwtService {
 		return Keys.hmacShaKeyFor(key);
 	}
 	
-	@Override
-	public boolean isTokenValid(String token, UserDetails userDetails) {
-		final String username = extractUserName(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-	}
-
-	private boolean isTokenExpired(String token) {
-		return extractClaim(token, Claims::getExpiration).before(new Date(System.currentTimeMillis()));
-	}
-
-	public String invalidateToken(String token) {
-		extractClaim(token, null);
-		return null;
-	}
+	
 	
 	
 }
